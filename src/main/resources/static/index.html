@@ -8,7 +8,6 @@
 <script>
 
 function setColor() {
-   alert("Page is loaded");
     get("/color", function (response) {
         alert("color=" + response);
         document.body.style.backgroundColor = response;
