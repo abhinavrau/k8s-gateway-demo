@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: gateway-demo
+  name: gateway-demo  
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gateway-demo
+  template:
+    metadata:
+      labels:
+        app: gateway-demo
+    spec:
+      containers:
+      - image: msathetech/k8s-gateway-demo:v1
+        imagePullPolicy: Always
+        name: k8s-gateway-demo
+        
