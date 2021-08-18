@@ -1,14 +1,18 @@
-kind: Gateway
 apiVersion: networking.x-k8s.io/v1alpha1
+kind: Gateway
 metadata:
-  name: external-http
+  name: gateway
+  namespace: istio-system
 spec:
-  gatewayClassName: gke-l7-gxlb
+  gatewayClassName: istio
   listeners:
-  - protocol: HTTP
+  - hostname: "*"
     port: 80
+    protocol: HTTP
     routes:
-      kind: HTTPRoute
+      namespaces:
+        from: All
       selector:
         matchLabels:
-          gateway: external-http
+          selected: "yes"
+      kind: HTTPRoute
