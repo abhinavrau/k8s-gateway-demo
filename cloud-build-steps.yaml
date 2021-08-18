@@ -5,11 +5,11 @@
    secretEnv: ['USERNAME', 'PASSWORD']
  - name: 'gcr.io/cloud-builders/docker'
    entrypoint: 'bash'
-   args: ['-c', 'docker build -t $$USERNAME/k8s-gateway-demo:v1 .']
+   args: ['-c', 'docker build -t $$USERNAME/k8s-gateway-demo:v2 .']
    secretEnv: ['USERNAME']
  - name: 'gcr.io/cloud-builders/docker'
    entrypoint: 'bash'
-   args: ['-c', 'docker push $$USERNAME/k8s-gateway-demo:v1']
+   args: ['-c', 'docker push $$USERNAME/k8s-gateway-demo:v2']
    secretEnv: ['USERNAME']
  availableSecrets:
    secretManager:
