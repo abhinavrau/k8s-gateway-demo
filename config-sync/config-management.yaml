@@ -1,0 +1,10 @@
+apiVersion: configmanagement.gke.io/v1
+kind: ConfigManagement
+metadata:
+  name: config-management
+spec:
+  # clusterName is required if you want to use ClusterSelectors and must be
+  # unique among all managed clusters
+  # clusterName: CLUSTER_NAME
+  # Enable multi-repo mode to use additional features
+  enableMultiRepo: true

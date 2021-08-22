@@ -19,7 +19,18 @@ gcloud builds submit ./  --tag=gcr.io/$PROJECT_ID/k8s-gateway-demo
 gcloud container clusters get-credentials [your-gke-cluster-name] --zone=[your-gke-zone]
 ```
 
+## Download Istio
+```
+curl -L https://istio.io/downloadIstio | sh -
+```
 
+## Install Istio the GKE Cluster from https://istio.io/latest/docs/tasks/traffic-management/ingress/gateway-api/
+```
+kubectl kustomize "github.com/kubernetes-sigs/gateway-api/config/crd?ref=v0.3.0" | kubectl apply -f -
+istioctl install
+```
+
+## Setup ConfigSync
 ## Setup GKE cluster with Istio Gateway class
 
 Follow the [docs](https://cloud.google.com/kubernetes-engine/docs/how-to/deploying-gateways)
