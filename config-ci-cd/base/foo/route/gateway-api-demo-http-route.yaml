@@ -3,8 +3,7 @@ apiVersion: networking.x-k8s.io/v1alpha1
 metadata:
   name: k8s-gateway-api-demo
   labels:
-    #gateway: external-http
-    selected: "yes"
+    gateway: external-http
 spec:
   gateways:
     allow: All
@@ -16,6 +15,9 @@ spec:
         type: Prefix
         value: /
     forwardTo:
-    - serviceName: k8s-gateway-api-demo-service-blue
+    - serviceName: k8s-gateway-api-demo-service-v1
       port: 8080
       weight: 100
+    - serviceName: k8s-gateway-api-demo-service-v2
+      port: 8080
+      weight: 0

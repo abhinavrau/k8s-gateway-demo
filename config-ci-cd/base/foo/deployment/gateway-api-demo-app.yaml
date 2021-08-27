@@ -2,20 +2,20 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: k8s-gateway-api-demo-v2
-  name: k8s-gateway-api-demo-v2  
+    app: k8s-gateway-api-demo
+  name: k8s-gateway-api-demo  
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: k8s-gateway-api-demo-v2
+      app: k8s-gateway-api-demo
   template:
     metadata:
       labels:
-        app: k8s-gateway-api-demo-v2
+        app: k8s-gateway-api-demo
     spec:
       containers:
-      - image: msathetech/k8s-gateway-demo@sha256:dfa7fea32685762e75726b1875b0877d84241f5387dde1a1edc374e715037776
+      - image: msathetech/k8s-gateway-demo@sha256:5c3326737cf50928ead9bcde77f3e73f0baee40dc7aa54737b1606b5ef3c156f
         imagePullPolicy: Always
         name: k8s-gateway-api-demo
         resources:
@@ -33,14 +33,15 @@ spec:
             valueFrom:
               fieldRef:
                 fieldPath: status.podIP
+          
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: k8s-gateway-api-demo-service-v2
+  name: k8s-gateway-api-demo-service
 spec:
   selector:
-    app: k8s-gateway-api-demo-v2
+    app: k8s-gateway-api-demo
   ports:
   - port: 8080
     targetPort: 8080

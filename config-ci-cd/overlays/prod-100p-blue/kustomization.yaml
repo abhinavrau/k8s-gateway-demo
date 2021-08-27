@@ -23,22 +23,18 @@ patches:
     kind: HTTPRoute
     name: k8s-gateway-api-demo
   patch: |-
-
     - op: replace
       path: /spec/rules/0/forwardTo/0/serviceName
-      value: "k8s-gateway-api-demo-service-__PREVIOUS_VERSION__"
+      value: "k8s-gateway-api-demo-service-__VERSION__"
     - op: replace
       path: /spec/rules/0/forwardTo/0/weight
-      value: 50
+      value: 100
 
-      # add app 
-    - op: add
+      # Remove second app 
+    - op: remove
       path: /spec/rules/0/forwardTo/1/serviceName
-      value: "k8s-gateway-api-demo-service-__VERSION__"
-    - op: add
+    - op: remove
       path: /spec/rules/0/forwardTo/1/port
-      value: 8080
-    - op: add
+    - op: remove
       path: /spec/rules/0/forwardTo/1/weight
-      value: 50
       

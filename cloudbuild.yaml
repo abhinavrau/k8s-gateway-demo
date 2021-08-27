@@ -1,24 +1,59 @@
- steps:
- - name: 'gcr.io/cloud-builders/docker'
-   entrypoint: 'bash'
-   args: ['-c', 'docker login --username=$$USERNAME --password=$$PASSWORD']
-   secretEnv: ['USERNAME', 'PASSWORD']
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  entrypoint: 'bash'
+  args: ['-c', 'docker login --username=$$DOCKER_HUB_USERNAME --password=$$DOCKER_HUB_PASSWORD']
+  secretEnv: ['USERNAME', 'PASSWORD']
 
 # Build foo app
- - name: 'gcr.io/cloud-builders/docker'
-   entrypoint: 'bash'
-   args: ['-c', 'docker build -t $$USERNAME/k8s-gateway-demo:${SHORT_SHA} .']
-   secretEnv: ['USERNAME']
-   dir: apps/foo-app
- - name: 'gcr.io/cloud-builders/docker'
-   entrypoint: 'bash'
-   args: ['-c', 'docker push $$USERNAME/k8s-gateway-demo:${SHORT_SHA}']
-   secretEnv: ['USERNAME']
-   dir: apps/foo-app
+- name: 'gcr.io/cloud-builders/docker'
+  entrypoint: 'bash'
+  args: ['-c', 'docker build -t $$USERNAME/k8s-gateway-demo:${SHORT_SHA} .']
+  secretEnv: ['USERNAME']
+  dir: apps/foo-app
+- name: 'gcr.io/cloud-builders/docker'
+  entrypoint: 'bash'
+  args: ['-c', 'docker push $$USERNAME/k8s-gateway-demo:${SHORT_SHA}']
+  secretEnv: ['USERNAME']
+  dir: apps/foo-app
+- name: 'gcr.io/google-samples/cloudbuild-kustomize:latest'
+  id: Render Config foo-app
+  entrypoint: 'bash'
+  args:
+  - '-eEuo'
+  - 'pipefail'
+  - '-c'
+  - |-
+    git clone https://github.com/$$GITHUB_USERNAME/sp1-config-sync-app-owner && \
+    cd sp1-config-sync-app-owner 
+    git config user.email $$GITHUB_EMAIL
+    git config user.name $$GITHUB_USERNAME 
+    git remote set-url origin https://$$GITHUB_USERNAME:$$GITHUB_TOKEN@github.com/$$GITHUB_USERNAME/sp1-config-sync-app-owner.git
+    cd ../config-ci-cd
 
- availableSecrets:
-   secretManager:
-   - versionName: projects/sp1-21-gateway/secrets/docker-password/versions/1
-     env: 'PASSWORD'
-   - versionName: projects/sp1-21-gateway/secrets/docker-username/versions/1
-     env: 'USERNAME'
+    sed -i 's/__VERSION__/'"$SHORT_SHA"'/g' overlays/deployment/kustomization.yaml
+    kustomize build overlays/deployment --output sp1-config-sync-app-owner/
+
+    cd sp1-config-sync-app-owner 
+
+    rm README.md 
+    echo "Update foo-app to version: ${SHORT_SHA}" > README.md
+
+    git add . && \
+    git commit -m "Rendered: ${SHORT_SHA}
+    Built from commit ${COMMIT_SHA} of repository foo-config-source - main branch 
+    Author: $(git log --format='%an <%ae>' -n 1 HEAD)" && \
+    git push origin main
+  secretEnv: ['GITHUB_EMAIL', 'GITHUB_USERNAME', 'GITHUB_TOKEN']
+
+availableSecrets:
+  secretManager:
+  - versionName: projects/sp1-21-gateway/secrets/docker-password/versions/1
+    env: 'DOCKER_HUB_PASSWORD'
+  - versionName: projects/sp1-21-gateway/secrets/docker-username/versions/1
+    env: 'DOCKER_HUB_USERNAME'
+  - versionName: projects/${PROJECT_ID}/secrets/github-username/versions/1 
+    env: 'GITHUB_USERNAME'
+  - versionName: projects/${PROJECT_ID}/secrets/github-token/versions/1 
+    env: 'GITHUB_TOKEN'
+  - versionName: projects/${PROJECT_ID}/secrets/github-email/versions/1 
+    env: 'GITHUB_EMAIL'
