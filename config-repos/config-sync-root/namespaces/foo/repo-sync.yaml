@@ -1,0 +1,18 @@
+# ROOT_REPO/namespaces/NAMESPACE/repo-sync.yaml
+ # If you are using a Config Sync version earlier than 1.8.0,
+ # use: apiVersion: configsync.gke.io/v1alpha1
+apiVersion: configsync.gke.io/v1beta1
+kind: RepoSync
+metadata:
+  name: repo-sync
+  namespace: foo
+spec:
+  # Since this is for a namespace repository, the format should be unstructured
+  sourceFormat: unstructured
+  git:
+   repo: git@github.com:abhinavrau/sp1-config-sync-app-owner.git
+   branch: main
+   dir: "/"
+   auth: ssh
+   secretRef:
+     name: foo-git-creds

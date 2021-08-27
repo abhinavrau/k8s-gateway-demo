@@ -1,0 +1,35 @@
+ steps:
+ - name: 'gcr.io/cloud-builders/docker'
+   entrypoint: 'bash'
+   args: ['-c', 'docker login --username=$$USERNAME --password=$$PASSWORD']
+   secretEnv: ['USERNAME', 'PASSWORD']
+# Build foo-blue version 
+ - name: 'gcr.io/cloud-builders/docker'
+   entrypoint: 'bash'
+   args: ['-c', 'docker build -t $$USERNAME/k8s-gateway-demo:v1 .']
+   secretEnv: ['USERNAME']
+   dir: apps/foo-blue
+ - name: 'gcr.io/cloud-builders/docker'
+   entrypoint: 'bash'
+   args: ['-c', 'docker push $$USERNAME/k8s-gateway-demo:v1']
+   secretEnv: ['USERNAME']
+   dir: apps/foo-blue
+
+# Build foo-green version 
+ - name: 'gcr.io/cloud-builders/docker'
+   entrypoint: 'bash'
+   args: ['-c', 'docker build -t $$USERNAME/k8s-gateway-demo:v2 .']
+   secretEnv: ['USERNAME']
+   dir: apps/foo-green
+ - name: 'gcr.io/cloud-builders/docker'
+   entrypoint: 'bash'
+   args: ['-c', 'docker push $$USERNAME/k8s-gateway-demo:v2']
+   secretEnv: ['USERNAME']
+   dir: apps/foo-green
+
+ availableSecrets:
+   secretManager:
+   - versionName: projects/sp1-21-gateway/secrets/docker-password/versions/1
+     env: 'PASSWORD'
+   - versionName: projects/sp1-21-gateway/secrets/docker-username/versions/1
+     env: 'USERNAME'

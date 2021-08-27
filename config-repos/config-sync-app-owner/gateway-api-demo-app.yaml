@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: k8s-gateway-api-demo
+  name: k8s-gateway-api-demo  
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: k8s-gateway-api-demo
+  template:
+    metadata:
+      labels:
+        app: k8s-gateway-api-demo
+    spec:
+      containers:
+      - image: msathetech/k8s-gateway-demo@sha256:5c3326737cf50928ead9bcde77f3e73f0baee40dc7aa54737b1606b5ef3c156f
+        imagePullPolicy: Always
+        name: k8s-gateway-api-demo
+        resources:
+          limits:
+            cpu: "1"
+            memory: 256Mi
+          requests:
+            cpu: "0.5"
+        env:
+          - name: POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: POD_IP
+            valueFrom:
+              fieldRef:
+                fieldPath: status.podIP
+          
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: k8s-gateway-api-demo-service
+spec:
+  selector:
+    app: k8s-gateway-api-demo
+  ports:
+  - port: 8080
+    targetPort: 8080
+

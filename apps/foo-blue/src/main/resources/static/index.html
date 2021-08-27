@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<body onload="setColor()">
+
+<h1>Hello SP1 K8's Gateway API</h1>
+
+
+<script>
+
+function setColor() {
+    get("/color", function (response) {
+        document.body.style.backgroundColor = response;
+    })
+}
+function get(theUrl, callback)
+{
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.onreadystatechange = function() {
+        if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+            callback(xmlHttp.responseText);
+    }
+    xmlHttp.open("GET", theUrl, true); // true for asynchronous
+    xmlHttp.send(null);
+}
+</script>
+
+</body>
+</html>

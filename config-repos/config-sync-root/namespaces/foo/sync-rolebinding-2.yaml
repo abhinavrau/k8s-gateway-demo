@@ -1,0 +1,14 @@
+# ROOT_REPO/namespaces/NAMESPACE/sync-rolebinding.yaml
+ kind: RoleBinding
+ apiVersion: rbac.authorization.k8s.io/v1
+ metadata:
+   name: syncs-repo-2
+   namespace: foo
+ subjects:
+ - kind: ServiceAccount
+   name: ns-reconciler-foo
+   namespace: config-management-system
+ roleRef:
+   kind: ClusterRole
+   name: app-and-http-route-manager
+   apiGroup: rbac.authorization.k8s.io
