@@ -2,21 +2,23 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   entrypoint: 'bash'
   args: ['-c', 'docker login --username=$$DOCKER_HUB_USERNAME --password=$$DOCKER_HUB_PASSWORD']
-  secretEnv: ['USERNAME', 'PASSWORD']
+  secretEnv: ['DOCKER_HUB_USERNAME', 'DOCKER_HUB_PASSWORD']
 
 # Build foo app
 - name: 'gcr.io/cloud-builders/docker'
   entrypoint: 'bash'
-  args: ['-c', 'docker build -t $$USERNAME/k8s-gateway-demo:${SHORT_SHA} .']
-  secretEnv: ['USERNAME']
+  args: ['-c', 'docker build -t $$DOCKER_HUB_USERNAME/k8s-gateway-demo:${SHORT_SHA} .']
+  secretEnv: ['DOCKER_HUB_USERNAME']
   dir: apps/foo-app
 - name: 'gcr.io/cloud-builders/docker'
   entrypoint: 'bash'
-  args: ['-c', 'docker push $$USERNAME/k8s-gateway-demo:${SHORT_SHA}']
-  secretEnv: ['USERNAME']
+  args: ['-c', 'docker push $$DOCKER_HUB_USERNAME/k8s-gateway-demo:${SHORT_SHA}']
+  secretEnv: ['DOCKER_HUB_USERNAME']
   dir: apps/foo-app
+
+# Render New Deployment config with new container version and commit to config-sync-app-owner repo
 - name: 'gcr.io/google-samples/cloudbuild-kustomize:latest'
-  id: Render Config foo-app
+  id: Render New Deployment and Commit to config-sync-app-owner repo
   entrypoint: 'bash'
   args:
   - '-eEuo'
