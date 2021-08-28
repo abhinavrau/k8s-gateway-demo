@@ -12,7 +12,7 @@ public class ColorController {
 
     @GetMapping("/color")
     public String color() {
-        return "green";
+        return "yellow";
     }
 
 }
