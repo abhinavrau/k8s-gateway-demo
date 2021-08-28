@@ -74,7 +74,7 @@ steps:
       sed -i 's/__PREVIOUS_VERSION__/'"${_SERVICE_N_SHA}"'/g' overlays/prod-50-50/kustomization.yaml
       export _SERVICE_N_PLUS_1_SHA = $(echo ${_SERVICES} | awk '{print $2}' | sed -e "s/^k8s-gateway-api-demo-service-//")
       sed -i 's/__VERSION__/'"${_SERVICE_N_PLUS_1_SHA}"'/g' overlays/prod-50-50/kustomization.yaml
-      kustomize build overlays/deployment --output ../sp1-config-sync-app-owner/gateway-api-demo-app-http-route.yaml
+      kustomize build overlays/prod-50-50 --output ../sp1-config-sync-app-owner/gateway-api-demo-app-http-route.yaml
 
       cd ../sp1-config-sync-app-owner
 
