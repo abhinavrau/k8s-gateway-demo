@@ -47,6 +47,49 @@ steps:
     git push origin main
   secretEnv: ['GITHUB_EMAIL', 'GITHUB_USERNAME', 'GITHUB_TOKEN']
 
+# Render HTTPRoute 
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:latest'
+  id: Render New HTTPRoute and Commit to config-sync-app-owner repo
+  entrypoint: 'bash'
+  args:
+  - '-eEuo'
+  - 'pipefail'
+  - '-c'
+  - |-
+    git clone https://github.com/$$GITHUB_USERNAME/sp1-config-sync-app-owner && \
+    cd sp1-config-sync-app-owner 
+    git config user.email $$GITHUB_EMAIL
+    git config user.name $$GITHUB_USERNAME 
+    git remote set-url origin https://$$GITHUB_USERNAME:$$GITHUB_TOKEN@github.com/$$GITHUB_USERNAME/sp1-config-sync-app-owner.git
+    cd ../config-ci-cd
+
+    # Consider a better way to ensure new version of the app/service is deployed
+    sleep 20 
+    
+    gcloud container clusters get-credentials s1p-demo --zone=us-central1-c
+    export SERVICES=$(kubectl get service -n foo --sort-by=.metadata.creationTimestamp | awk '{print $1}' | tail -n +2)
+    export NO_OF_SERVICES=$(echo $SERVICES | wc -l)
+    if [ $NO_OF_SERVICES -eq "2" ]; 
+    then 
+      echo "got 2"; 
+      SERVICE_N_SHA = $(echo $SERVICES | awk '{print $1}') | sed -e "s/^k8s-gateway-api-demo-service-//"
+      sed -i 's/__PREVIOUS_VERSION__/'"$SERVICE_N_SHA"'/g' overlays/prod-50-50/kustomization.yaml
+      SERVICE_N_PLUS_1_SHA = $(echo $SERVICES | awk '{print $2}' | sed -e "s/^k8s-gateway-api-demo-service-//")
+      sed -i 's/__VERSION__/'"$SERVICE_N_PLUS_1_SHA"'/g' overlays/prod-50-50/kustomization.yaml
+      kustomize build overlays/deployment --output ../sp1-config-sync-app-owner/gateway-api-demo-app-http-route.yaml
+
+      git add . && \
+      git commit -m "Rendered: ${SHORT_SHA}
+        Built from commit ${COMMIT_SHA} of repository foo-config-source - main branch 
+        Author: $(git log --format='%an <%ae>' -n 1 HEAD)" && \
+      git request-pull 
+    else 
+      echo "check your services"; 
+    fi
+    
+  secretEnv: ['GITHUB_EMAIL', 'GITHUB_USERNAME', 'GITHUB_TOKEN']
+
+
 availableSecrets:
   secretManager:
   - versionName: projects/sp1-21-gateway/secrets/docker-password/versions/1
