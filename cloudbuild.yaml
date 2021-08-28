@@ -33,9 +33,9 @@ steps:
     cd ../config-ci-cd
 
     sed -i 's/__VERSION__/'"$SHORT_SHA"'/g' overlays/deployment/kustomization.yaml
-    kustomize build overlays/deployment --output sp1-config-sync-app-owner/
+    kustomize build overlays/deployment --output ../sp1-config-sync-app-owner/gateway-api-demo-app-"$SHORT_SHA".yaml
 
-    cd sp1-config-sync-app-owner 
+    cd ../sp1-config-sync-app-owner 
 
     rm README.md 
     echo "Update foo-app to version: ${SHORT_SHA}" > README.md
