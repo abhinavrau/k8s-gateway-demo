@@ -67,7 +67,7 @@ steps:
     gcloud container clusters get-credentials s1p-demo --zone=us-central1-c
     export _SERVICES=$(kubectl get service -n foo --sort-by=.metadata.creationTimestamp | awk '{print $1}' | tail -n +2)
     export _NO_OF_SERVICES=$(echo ${_SERVICES} | wc -l)
-    if [ "${_NO_OF_SERVICES}" -eq "2" ]; 
+    if [[ "${_NO_OF_SERVICES}" == "2" ]]; 
     then 
       echo "got 2"; 
       export _SERVICE_N_SHA = $(echo ${_SERVICES} | awk '{print $1}') | sed -e "s/^k8s-gateway-api-demo-service-//"
