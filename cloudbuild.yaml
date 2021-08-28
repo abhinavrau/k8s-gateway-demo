@@ -45,6 +45,7 @@ steps:
     Built from commit ${COMMIT_SHA} of repository foo-config-source - main branch 
     Author: $(git log --format='%an <%ae>' -n 1 HEAD)" && \
     git push origin main
+    cd ..
   secretEnv: ['GITHUB_EMAIL', 'GITHUB_USERNAME', 'GITHUB_TOKEN']
 
 # Render HTTPRoute 
@@ -56,14 +57,10 @@ steps:
   - 'pipefail'
   - '-c'
   - |-
+    echo "Current Directory is -------"
+    pwd
+    cd config-ci-cd
     
-    git clone https://github.com/$$GITHUB_USERNAME/sp1-config-sync-app-owner && \
-    cd sp1-config-sync-app-owner 
-    git config user.email $$GITHUB_EMAIL
-    git config user.name $$GITHUB_USERNAME 
-    git remote set-url origin https://$$GITHUB_USERNAME:$$GITHUB_TOKEN@github.com/$$GITHUB_USERNAME/sp1-config-sync-app-owner.git
-    cd ../config-ci-cd
-
     # Consider a better way to ensure new version of the app/service is deployed
     sleep 15 
     
@@ -78,6 +75,8 @@ steps:
       export _SERVICE_N_PLUS_1_SHA = $(echo ${_SERVICES} | awk '{print $2}' | sed -e "s/^k8s-gateway-api-demo-service-//")
       sed -i 's/__VERSION__/'"${_SERVICE_N_PLUS_1_SHA}"'/g' overlays/prod-50-50/kustomization.yaml
       kustomize build overlays/deployment --output ../sp1-config-sync-app-owner/gateway-api-demo-app-http-route.yaml
+
+      cd ../sp1-config-sync-app-owner
 
       git add . && \
       git commit -m "Rendered: ${SHORT_SHA}
