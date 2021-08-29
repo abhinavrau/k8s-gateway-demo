@@ -21,11 +21,6 @@ public class ColorController {
                 .build();
     }
 
-    @GetMapping("/color")
-    public String color() {
-        return "purple";
-    }
-
     @GetMapping("/metadata")
     public Map<String, String> metadata() {
         

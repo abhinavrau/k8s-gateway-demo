@@ -18,7 +18,7 @@
 get("/metadata", function (response) {
 
     var obj = JSON.parse(response);
-    document.body.style.backgroundColor = getColor(obj.color);
+    document.body.style.backgroundColor = obj.color;
 
     new gridjs.Grid({
         columns: ['Property', 'Value'],
@@ -34,12 +34,6 @@ get("/metadata", function (response) {
 
     
 })
-
-
-function getColor(response)
-{
-    
-}
 
 function get(theUrl, callback)
 {
