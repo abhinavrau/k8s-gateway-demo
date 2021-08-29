@@ -16,40 +16,29 @@
 
 
 get("/metadata", function (response) {
+
+    var obj = JSON.parse(response);
+    document.body.style.backgroundColor = getColor(obj.color);
+
     new gridjs.Grid({
-        columns: [{
-            id: 'color',
-            name: 'color'
-        }, {
-            id: 'ClusterName',
-            name: 'ClusterName'
-        },{
-            id: 'Instance/Zone',
-            name: 'Instance/Zone'
-        }, {
-            id: 'Host',
-            name: 'Host'
-        }, {
-            id: 'Pod_IP',
-            name: 'Pod_IP'
-        }, {
-            id: 'Pod_Namespace',
-            name: 'Pod_Namespace'
-        }, {
-            id: 'Project_ID',
-            name: 'Project_ID'
-        }],
-        data: [response]
+        columns: ['Property', 'Value'],
+        data: [
+            ['ClusterName', obj.ClusterName],
+            ['Zone', obj.Zone],
+            ['Host', obj.Host],
+            ['Pod_IP', obj.Pod_IP],
+            ['Pod_Namespace', obj.Pod_Namespace],
+            ['Project_ID', obj.Project_ID]
+        ]
     }).render(document.getElementById("wrapper"));
 
-    document.body.style.backgroundColor = getColor(response);
+    
 })
 
 
 function getColor(response)
 {
-    var obj = JSON.parse(response);
-    return obj.color;
+    
 }
 
 function get(theUrl, callback)

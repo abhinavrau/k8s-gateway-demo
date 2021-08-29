@@ -36,7 +36,7 @@ public class ColorController {
                     .block();
             map.put("ClusterName", cluster_name);
             String instance = webClient.get().uri("instance/zone").retrieve().bodyToMono(String.class).block();
-            map.put("Instance/Zone", instance);
+            map.put("Zone", instance);
             String hostname = webClient.get().uri("instance/hostname").retrieve().bodyToMono(String.class).block();
             map.put("Host", hostname);
             map.put("Pod_IP", System.getenv().get("POD_IP"));
