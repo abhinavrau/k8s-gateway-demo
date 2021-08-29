@@ -73,7 +73,9 @@ steps:
     if [[ $(echo $?) -eq 0 ]];
     then 
       echo "Got the services"
-      _NO_OF_SERVICES=$(cat services.txt | wc -l)
+      cat services.txt
+      cat services.txt | wc -l 
+      export _NO_OF_SERVICES=$(cat services.txt | wc -l)
       if [[ "${_NO_OF_SERVICES}" == "2" ]]; 
       then 
         echo "Got 2 services"; 
