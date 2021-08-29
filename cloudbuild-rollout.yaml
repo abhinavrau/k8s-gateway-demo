@@ -1,0 +1,17 @@
+steps:
+# Render HTTPRoute to rollout 100% traffic to N+1
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:latest'
+  id: Rollback new application deployment and route 100% traffic to older deployment 
+  entrypoint: 'bash'
+  args: ['./rollout.sh']
+  secretEnv: ['GITHUB_EMAIL', 'GITHUB_USERNAME', 'GITHUB_TOKEN']
+
+
+availableSecrets:
+  secretManager:
+  - versionName: projects/${PROJECT_ID}/secrets/github-username/versions/1 
+    env: 'GITHUB_USERNAME'
+  - versionName: projects/${PROJECT_ID}/secrets/github-token/versions/1 
+    env: 'GITHUB_TOKEN'
+  - versionName: projects/${PROJECT_ID}/secrets/github-email/versions/1 
+    env: 'GITHUB_EMAIL'
