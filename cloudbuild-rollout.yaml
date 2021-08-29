@@ -4,7 +4,7 @@ steps:
   id: Rollback new application deployment and route 100% traffic to older deployment 
   entrypoint: 'bash'
   args: ['./rollout.sh']
-  secretEnv: ['GITHUB_EMAIL', 'GITHUB_USERNAME', 'GITHUB_TOKEN', $_CLUSTER_NAME=$_CLUSTER_NAME, $_CLUSTER_REGION=$_CLUSTER_REGION]
+  secretEnv: ['GITHUB_EMAIL', 'GITHUB_USERNAME', 'GITHUB_TOKEN']
   env: [_CLUSTER_NAME=$_CLUSTER_NAME, _CLUSTER_REGION=$_CLUSTER_REGION]
 
 substitutions:
