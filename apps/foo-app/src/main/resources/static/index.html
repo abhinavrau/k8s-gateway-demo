@@ -39,7 +39,7 @@ get("/metadata", function (response) {
             id: 'Project_ID',
             name: 'Project_ID'
         }],
-        data: response
+        data: [response]
     }).render(document.getElementById("wrapper"));
 
     document.body.style.backgroundColor = getColor(response);
