@@ -15,4 +15,9 @@ public class ColorController {
         return "orange";
     }
 
+    @GetMapping("/metadata")
+    public String metadata() {
+        return System.getenv().get("POD_IP");
+    }
+
 }

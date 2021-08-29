@@ -1,17 +1,22 @@
 <!DOCTYPE html>
 <html>
-<body onload="setColor()">
+<body onload="getColor()">
 
 <h1>Hello SP1 K8's Gateway API</h1>
 
-
+ POD IP: <p id="p1">Hello World!</p>
 <script>
 
-function setColor() {
+get("/metadata", function (response) {
+    document.getElementById("p1").innerHTML = response;
+})
+
+function getColor() {
     get("/color", function (response) {
         document.body.style.backgroundColor = response;
     })
 }
+
 function get(theUrl, callback)
 {
     var xmlHttp = new XMLHttpRequest();
