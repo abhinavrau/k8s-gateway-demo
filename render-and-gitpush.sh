@@ -27,7 +27,7 @@ render_http_route_50_50()
     pwd
     cd config-ci-cd
     # Use the SHA of the current service 
-    export _SERVICE_N_SHA=$(cat svc-names.txt | sed -e "s/^k8s-gateway-api-demo-service-//")
+    export _SERVICE_N_SHA=$(cat ../svc-names.txt | sed -e "s/^k8s-gateway-api-demo-service-//")
     sed -i 's/__PREVIOUS_VERSION__/'"${_SERVICE_N_SHA}"'/g' overlays/prod-50-50/kustomization.yaml
     
     # Use ${SHORT_SHA} for new service 
