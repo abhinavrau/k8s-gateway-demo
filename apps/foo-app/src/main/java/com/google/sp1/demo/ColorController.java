@@ -31,10 +31,19 @@ public class ColorController {
         
         if (map.isEmpty()) {
 
+            String cluster_name = webClient.get().uri("instance/attributes/cluster-name").retrieve().bodyToMono(String.class)
+                    .block();
+            map.put("CLUSTER_NAME", cluster_name);
+            String instance = webClient.get().uri("instance/zone").retrieve().bodyToMono(String.class).block();
+            map.put("INSTANCE/ZONE", instance);
+            String hostname = webClient.get().uri("instance/hostname").retrieve().bodyToMono(String.class).block();
+            map.put("HOSTNAME", hostname);
             map.put("POD_IP", System.getenv().get("POD_IP"));
             map.put("POD_NAMESPACE", System.getenv().get("POD_NAMESPACE"));
             String project = webClient.get().uri("project/project-id").retrieve().bodyToMono(String.class).block();
             map.put("PROJECT_ID", project);
+    
+            
         }
         return map;
     }
