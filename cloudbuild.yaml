@@ -69,14 +69,16 @@ steps:
 
     # We are retrieving the deployed services and the GIT-SHA from the service names to identify the previous deployment which is currently servicing live traffic. 
     # In real world we will retrieve it from the Cloud Build API and find out the last 'successful' build and its associated GIT-SHA.
-    kubectl get service -n foo --sort-by=.metadata.creationTimestamp | awk '{print $1}' | tail -n +2 > services.txt 2> errors.txt
+    kubectl get service -n foo --sort-by=.metadata.creationTimestamp > services.txt 2> errors.txt
     if [[ $(echo $?) -eq 0 ]];
     then 
       echo "Got the services"
       cat services.txt
-      cat services.txt | wc -l 
-      export _NO_OF_SERVICES=$(cat services.txt | wc -l)
-      if [[ "${_NO_OF_SERVICES}" == "2" ]]; 
+      cat services.txt | awk '{print $1}' | tail -n +2 > svc-names.txt
+      echo svc-names.txt
+      export _NO_OF_SERVICES=$(cat svc-names.txt | wc -l)
+      echo ${_NO_OF_SERVICES}
+      if [[ ${_NO_OF_SERVICES} == 2 ]]; 
       then 
         echo "Got 2 services"; 
         export _SERVICE_N_SHA = $(echo ${_SERVICES} | awk '{print $1}') | sed -e "s/^k8s-gateway-api-demo-service-//"
