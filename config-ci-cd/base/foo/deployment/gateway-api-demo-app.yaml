@@ -15,6 +15,7 @@ spec:
         app: k8s-gateway-api-demo
     spec:
       containers:
+      # Please change this to your Docker repo
       - image: msathetech/k8s-gateway-demo@sha256:5c3326737cf50928ead9bcde77f3e73f0baee40dc7aa54737b1606b5ef3c156f
         imagePullPolicy: Always
         name: k8s-gateway-api-demo

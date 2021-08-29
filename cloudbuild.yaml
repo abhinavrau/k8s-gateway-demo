@@ -64,7 +64,11 @@ steps:
     # Consider a better way to ensure new version of the app/service is deployed
     sleep 15 
     
-    gcloud container clusters get-credentials s1p-demo --zone=us-central1-c
+    # Please change this Cluster Name here. 
+    gcloud container clusters get-credentials sp1-cluster --region=us-east1
+
+    # We are retrieving the deployed services and the GIT-SHA from the service names to identify the previous deployment which is currently servicing live traffic. 
+    # In real world we will retrieve it from the Cloud Build API and find out the last 'successful' build and its associated GIT-SHA.
     export _SERVICES=$(kubectl get service -n foo --sort-by=.metadata.creationTimestamp | awk '{print $1}' | tail -n +2)
     export _NO_OF_SERVICES=$(echo ${_SERVICES} | wc -l)
     if [[ "${_NO_OF_SERVICES}" == "2" ]]; 
