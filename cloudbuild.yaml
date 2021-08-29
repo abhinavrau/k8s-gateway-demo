@@ -69,27 +69,34 @@ steps:
 
     # We are retrieving the deployed services and the GIT-SHA from the service names to identify the previous deployment which is currently servicing live traffic. 
     # In real world we will retrieve it from the Cloud Build API and find out the last 'successful' build and its associated GIT-SHA.
-    export _SERVICES=$(kubectl get service -n foo --sort-by=.metadata.creationTimestamp | awk '{print $1}' | tail -n +2)
-    export _NO_OF_SERVICES=$(echo ${_SERVICES} | wc -l)
-    if [[ "${_NO_OF_SERVICES}" == "2" ]]; 
+    kubectl get service -n foo --sort-by=.metadata.creationTimestamp | awk '{print $1}' | tail -n +2 > services.txt 2> errors.txt
+    if [[ $(echo $?) -eq 0 ]];
     then 
-      echo "got 2"; 
-      export _SERVICE_N_SHA = $(echo ${_SERVICES} | awk '{print $1}') | sed -e "s/^k8s-gateway-api-demo-service-//"
-      sed -i 's/__PREVIOUS_VERSION__/'"${_SERVICE_N_SHA}"'/g' overlays/prod-50-50/kustomization.yaml
-      export _SERVICE_N_PLUS_1_SHA = $(echo ${_SERVICES} | awk '{print $2}' | sed -e "s/^k8s-gateway-api-demo-service-//")
-      sed -i 's/__VERSION__/'"${_SERVICE_N_PLUS_1_SHA}"'/g' overlays/prod-50-50/kustomization.yaml
-      kustomize build overlays/prod-50-50 --output ../sp1-config-sync-app-owner/gateway-api-demo-app-http-route.yaml
+      echo "Got the services"
+      _NO_OF_SERVICES=$(cat services.txt | wc -l)
+      if [[ "${_NO_OF_SERVICES}" == "2" ]]; 
+      then 
+        echo "Got 2 services"; 
+        export _SERVICE_N_SHA = $(echo ${_SERVICES} | awk '{print $1}') | sed -e "s/^k8s-gateway-api-demo-service-//"
+        sed -i 's/__PREVIOUS_VERSION__/'"${_SERVICE_N_SHA}"'/g' overlays/prod-50-50/kustomization.yaml
+        export _SERVICE_N_PLUS_1_SHA = $(echo ${_SERVICES} | awk '{print $2}' | sed -e "s/^k8s-gateway-api-demo-service-//")
+        sed -i 's/__VERSION__/'"${_SERVICE_N_PLUS_1_SHA}"'/g' overlays/prod-50-50/kustomization.yaml
+        kustomize build overlays/prod-50-50 --output ../sp1-config-sync-app-owner/gateway-api-demo-app-http-route.yaml
 
-      cd ../sp1-config-sync-app-owner
+        cd ../sp1-config-sync-app-owner
 
-      git add . && \
-      git commit -m "Rendered: ${SHORT_SHA}
-        Built from commit ${COMMIT_SHA} of repository foo-config-source - main branch 
-        Author: $(git log --format='%an <%ae>' -n 1 HEAD)" && \
-      git push origin main
+        git add . && \
+        git commit -m "Rendered: ${SHORT_SHA}
+          Built from commit ${COMMIT_SHA} of repository foo-config-source - main branch 
+          Author: $(git log --format='%an <%ae>' -n 1 HEAD)" && \
+        git push origin main
+      else 
+        echo "check your services"; 
+      fi
     else 
-      echo "check your services"; 
-    fi
+      echo "Failed to connect to the cluster. Check your API server"
+      cat errors.txt
+    fi  
     
   secretEnv: ['GITHUB_EMAIL', 'GITHUB_USERNAME', 'GITHUB_TOKEN']
 
