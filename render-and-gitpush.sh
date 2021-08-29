@@ -1,8 +1,9 @@
 #!/bin/bash
 
-echo "${GITHUB_USERNAME}"
-echo "$COMMIT_SHA"
-
+echo "GitHub Username:${GITHUB_USERNAME}"
+echo "CommitSHA:${COMMIT_SHA}"
+echo "ClusterName: ${_CLUSTER_NAME}"
+echo "ClusterRegion: ${_CLUSTER_REGION}"
 render_app_and_service() 
 {
     pwd
@@ -83,7 +84,7 @@ git_clone()
 }
 
 # We are retrieving the deployed services and the GIT-SHA from the service names to identify the previous deployment which is currently servicing live traffic. 
-gcloud container clusters get-credentials sp1-cluster --region=us-east1
+gcloud container clusters get-credentials  ${_CLUSTER_NAME} --region=${_CLUSTER_REGION}
 # If your namespace has more than one app/service then please remember to add more filters
 kubectl get service -n foo --sort-by=.metadata.creationTimestamp > services.txt 2> errors.txt
 if [[ "$(echo $?)" == "0" ]];

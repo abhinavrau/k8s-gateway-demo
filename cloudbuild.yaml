@@ -23,8 +23,11 @@ steps:
   entrypoint: 'bash'
   args: ['./render-and-gitpush.sh']
   secretEnv: ['GITHUB_EMAIL', 'GITHUB_USERNAME', 'GITHUB_TOKEN']
-  env: ['SHORT_SHA=$SHORT_SHA', 'COMMIT_SHA=$COMMIT_SHA']
+  env: ['SHORT_SHA=$SHORT_SHA', 'COMMIT_SHA=$COMMIT_SHA', _CLUSTER_NAME=$_CLUSTER_NAME, CLUSTER_REGION=$_CLUSTER_REGION]
 
+substitutions:
+  _CLUSTER_NAME: sp1-cluster # default cluster name
+  _CLUSTER_REGION: us-east1 # default cluster region
 
 availableSecrets:
   secretManager:

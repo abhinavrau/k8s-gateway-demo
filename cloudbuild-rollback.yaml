@@ -5,7 +5,11 @@ steps:
   entrypoint: 'bash'
   args: ['./rollback.sh']
   secretEnv: ['GITHUB_EMAIL', 'GITHUB_USERNAME', 'GITHUB_TOKEN']
+  env: [_CLUSTER_NAME=$_CLUSTER_NAME, _CLUSTER_REGION=$_CLUSTER_REGION]
 
+substitutions:
+  _CLUSTER_NAME: sp1-cluster # default cluster name
+  _CLUSTER_REGION: us-east1 # default cluster region
 
 availableSecrets:
   secretManager:
