@@ -47,3 +47,13 @@ This will deploy the app, service and HTTPRoute
 ```
 kubectl apply -f k8s/app-owner/
 ```
+
+
+### Steps to perfom on a new Cluster
+- Install istio gateway CRD 
+- Install istio 
+- Setup ACM operator 
+- kubectl apply -f config-sync/config-management.yaml -f root-sync.yaml
+- Create secret for SSH private key of the GIT repos in cluster
+
+  
