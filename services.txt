@@ -1,3 +1,0 @@
-NAME                                   TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)    AGE
-k8s-gateway-api-demo-service-88c8655   ClusterIP   10.104.6.3    <none>        8080/TCP   117m
-k8s-gateway-api-demo-service-8af17f7   ClusterIP   10.104.5.59   <none>        8080/TCP   7m4s
