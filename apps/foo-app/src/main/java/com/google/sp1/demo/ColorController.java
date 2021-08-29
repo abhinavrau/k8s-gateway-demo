@@ -23,7 +23,7 @@ public class ColorController {
 
     @GetMapping("/color")
     public String color() {
-        return "yellow";
+        return "purple";
     }
 
     @GetMapping("/metadata")
