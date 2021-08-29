@@ -1,20 +1,55 @@
 <!DOCTYPE html>
-<html>
-<body onload="getColor()">
+<html lang="en">
+<head>
+    <link href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css" rel="stylesheet" />
+</head>
+<body >
 
 <h1>Hello SpringOne!!</h1>
 
- POD IP: <p id="p1">Hello World!</p>
+ 
+<div id="wrapper"></div>
+
+
+<script src="https://unpkg.com/gridjs/dist/gridjs.umd.js"></script>
 <script>
 
+
 get("/metadata", function (response) {
-    document.getElementById("p1").innerHTML = response;
+    new gridjs.Grid({
+        columns: [{
+            id: 'color',
+            name: 'color'
+        }, {
+            id: 'ClusterName',
+            name: 'ClusterName'
+        },{
+            id: 'Instance/Zone',
+            name: 'Instance/Zone'
+        }, {
+            id: 'Host',
+            name: 'Host'
+        }, {
+            id: 'Pod_IP',
+            name: 'Pod_IP'
+        }, {
+            id: 'Pod_Namespace',
+            name: 'Pod_Namespace'
+        }, {
+            id: 'Project_ID',
+            name: 'Project_ID'
+        }],
+        data: response
+    }).render(document.getElementById("wrapper"));
+
+    document.body.style.backgroundColor = getColor(response);
 })
 
-function getColor() {
-    get("/color", function (response) {
-        document.body.style.backgroundColor = response;
-    })
+
+function getColor(response)
+{
+    var obj = JSON.parse(response);
+    return obj.color;
 }
 
 function get(theUrl, callback)
