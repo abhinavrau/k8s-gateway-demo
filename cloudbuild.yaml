@@ -70,7 +70,7 @@ steps:
     # We are retrieving the deployed services and the GIT-SHA from the service names to identify the previous deployment which is currently servicing live traffic. 
     # In real world we will retrieve it from the Cloud Build API and find out the last 'successful' build and its associated GIT-SHA.
     kubectl get service -n foo --sort-by=.metadata.creationTimestamp > services.txt 2> errors.txt
-    if [[ $(echo $?) -eq 0 ]];
+    if [[ $(echo $?) == 0 ]];
     then 
       echo "Got the services"
       cat services.txt
