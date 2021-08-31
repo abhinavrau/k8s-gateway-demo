@@ -20,8 +20,9 @@ git clone https://github.com/[your-github-username]/k8s-gateway-demo.git
   - Change the git repo path in the [config-sync/root-sync.yaml](config-sync/root-sync.yaml) to point to the Root repo you just forked in the previous step above.
   - In your newly forked Root repo, navigate to the file `namespaces/foo/repo-sync.yaml` and change the git repo to point to the App Owner Repo you created in the previously.
 
-## Change the Docker username in file
-Change to the Docker username path for container image used in [config-ci-cd/base/foo/deployment/gateway-api-demo-app.yaml](config-ci-cd/base/foo/deployment/gateway-api-demo-app.yaml).
+## Change the Docker username in files
+- Change the Docker username path for container image used in [config-ci-cd/base/foo/deployment/gateway-api-demo-app.yaml](config-ci-cd/base/foo/deployment/gateway-api-demo-app.yaml).
+- Change the Docker username path for container image in [config-ci-cd/overlays/deployment/kustomization.yaml](config-ci-cd/overlays/deployment/kustomization.yaml)
 
 ## Create DockerHub and GitHub secrets
 - Create secrets called `docker-username` and `docker-password` in Secret Manager
