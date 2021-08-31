@@ -15,11 +15,15 @@ render_app_and_service()
     cd ../sp1-config-sync-app-owner 
 
     echo "Update foo-app to version: ${SHORT_SHA}" > README.md
+    
 
     git add gateway-api-demo-app-"$SHORT_SHA".yaml && \
     git commit -m "Rendered: ${SHORT_SHA}
     Built from commit ${COMMIT_SHA} of repository foo-config-source - main branch 
     Author: $(git log --format='%an <%ae>' -n 1 HEAD)" && \
+
+    echo "---Updated foo-app to version: ${SHORT_SHA}---"
+    echo "---Added gateway-api-demo-app-${SHORT_SHA}.yaml in Namespace (AppOwner) Config Sync Repo.---"
     cd ..
 }
 
@@ -42,7 +46,8 @@ render_http_route_50_50()
     git commit -m "Built from commit ${COMMIT_SHA} 
         Rendered HTTP-Route for 50-50 traffic split between service versions: ${_SERVICE_N_SHA} and ${SHORT_SHA}
         Author: $(git log --format='%an <%ae>' -n 1 HEAD)" 
-
+    echo "---Updated HttpRoute to split traffic 50-50 between older (${_SERVICE_N_SHA}) and newer (${SHORT_SHA})  versions.---"
+    echo "---Updated gateway-api-demo-http-route.yaml in the Namespace (AppOwner) Config Sync Repo---"
     cd ..
 }
 
@@ -69,7 +74,8 @@ git_push()
 {
     pwd
     cd sp1-config-sync-app-owner 
-    git push origin main
+    git tag ${SHORT_SHA}
+    git push origin main ${SHORT_SHA}
     cd ..
 }    
 
