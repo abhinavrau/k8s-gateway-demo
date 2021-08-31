@@ -23,8 +23,8 @@ rollout_http_route()
     git commit -m "Rolling out HTTP-Route! 
         Rendering HTTP-Route for 100% traffic to service version: ${_SERVICE_N_PLUS_ONE}
         Author: $(git log --format='%an <%ae>' -n 1 HEAD)" 
-    echo "---Updated HttpRoute to send 100% traffic to version: ${_SERVICE_N_SHA}---"
-    echo "---Updated gateway-api-demo-http-route.yaml in in the Namespace (AppOwner) Config Sync Repo---"
+    echo "---Updated HttpRoute to send 100% traffic to version: ${_SERVICE_N_PLUS_ONE}---"
+    echo "---Updated gateway-api-demo-http-route.yaml in the Namespace (AppOwner) Config Sync Repo---"
     cd ..
 }
 
@@ -32,7 +32,8 @@ git_push()
 {
     pwd
     cd sp1-config-sync-app-owner 
-    git push origin main
+    git tag "Rollout:${_SERVICE_N_PLUS_ONE}"
+    git push origin main "Rollout:${_SERVICE_N_PLUS_ONE}"
     cd ..
 }    
 
