@@ -26,7 +26,7 @@ public class ColorController {
         
         if (map.isEmpty()) {
             
-            map.put("color", "red");
+            map.put("color", "pink");
             String cluster_name = webClient.get().uri("instance/attributes/cluster-name").retrieve().bodyToMono(String.class)
                     .block();
             map.put("ClusterName", cluster_name);

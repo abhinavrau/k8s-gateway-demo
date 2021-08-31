@@ -5,7 +5,7 @@ metadata:
     app: k8s-gateway-api-demo
   name: k8s-gateway-api-demo  
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: k8s-gateway-api-demo
