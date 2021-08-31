@@ -22,7 +22,8 @@ rollback_http_route()
     git commit -m "Rolling back HTTP-Route! 
         Rendering HTTP-Route for 100% traffic to service version: ${_SERVICE_N_SHA}
         Author: $(git log --format='%an <%ae>' -n 1 HEAD)" 
-
+    echo "---Updated HttpRoute to send 100% traffic to version: ${_SERVICE_N_SHA}---"
+    echo "---Updated gateway-api-demo-http-route.yaml in in the Namespace (AppOwner) Config Sync Repo---"
     cd ..
 }
 
@@ -56,6 +57,8 @@ delete_new_app_and_service()
     git commit -m "Rolling back: ${_SERVICE_N_PLUS_ONE}
     Deleting file: gateway-api-demo-app-${_SERVICE_N_PLUS_ONE}.yaml
     Author: $(git log --format='%an <%ae>' -n 1 HEAD)" 
+    echo "---Deleting app version: ${_SERVICE_N_PLUS_ONE}---"
+    echo "---Deleting gateway-api-demo-app-${_SERVICE_N_PLUS_ONE}.yaml from the Namespace (AppOwner) Config Sync Repo---"
     cd ..
 }
 
