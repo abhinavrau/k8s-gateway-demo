@@ -74,7 +74,7 @@ git_push()
 {
     pwd
     cd sp1-config-sync-app-owner 
-    git tag ${SHORT_SHA}
+    #git tag ${SHORT_SHA}
     git push origin main ${SHORT_SHA}
     cd ..
 }    
