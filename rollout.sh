@@ -33,7 +33,7 @@ git_push()
     pwd
     cd sp1-config-sync-app-owner 
     #git tag "Rollout:${_SERVICE_N_PLUS_ONE}"
-    git push origin main "Rollout:${_SERVICE_N_PLUS_ONE}"
+    git push origin main #"Rollout:${_SERVICE_N_PLUS_ONE}"
     cd ..
 }    
 
