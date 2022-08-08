@@ -26,8 +26,8 @@ steps:
   env: ['SHORT_SHA=$SHORT_SHA', 'COMMIT_SHA=$COMMIT_SHA', _CLUSTER_NAME=$_CLUSTER_NAME, _CLUSTER_REGION=$_CLUSTER_REGION]
 
 substitutions:
-  _CLUSTER_NAME: sp1-cluster # default cluster name
-  _CLUSTER_REGION: us-east1 # default cluster region
+  _CLUSTER_NAME: k8s-gateway # default cluster name
+  _CLUSTER_REGION: us-central1 # default cluster region
 
 availableSecrets:
   secretManager:
