@@ -54,7 +54,7 @@ delete_new_app_and_service()
     export _SERVICE_N_PLUS_ONE=$(cat ../services.txt | awk '{print $1}' | tail -n +3 | sed -e "s/^k8s-gateway-api-demo-service-//")
     rm gateway-api-demo-app-"$_SERVICE_N_PLUS_ONE".yaml
 
-    git add gateway-api-demo-app-"$_SERVICE_N_PLUS_ONE".yaml && \
+    git add . && \
     git commit -m "Rolling back: ${_SERVICE_N_PLUS_ONE}
     Deleting file: gateway-api-demo-app-${_SERVICE_N_PLUS_ONE}.yaml
     Author: $(git log --format='%an <%ae>' -n 1 HEAD)" 
