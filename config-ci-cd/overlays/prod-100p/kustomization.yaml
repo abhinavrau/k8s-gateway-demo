@@ -24,17 +24,17 @@ patches:
     name: k8s-gateway-api-demo
   patch: |-
     - op: replace
-      path: /spec/rules/matches/0/backendRefs/0/name
+      path: /spec/rules/matches/backendRefs/0/name
       value: "k8s-gateway-api-demo-service-__VERSION__"
     - op: replace
-      path: /spec/rules/matches/0/backendRefs/0/weight
+      path: /spec/rules/matches/backendRefs/0/weight
       value: 100
 
       # Remove second app 
     - op: remove
-      path: /spec/rules/matches/0/backendRefs/1/name
+      path: /spec/rules/matches/backendRefs/1/name
     - op: remove
-      path: /spec/rules/matches/0/backendRefs/1/port
+      path: /spec/rules/matches/backendRefs/1/port
     - op: remove
-      path: /spec/rules/matches/0/backendRefs/1/weight
+      path: /spec/rules/matches/backendRefs/1/weight
       
