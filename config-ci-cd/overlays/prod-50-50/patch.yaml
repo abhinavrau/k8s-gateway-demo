@@ -1,0 +1,18 @@
+kind: HTTPRoute
+apiVersion: gateway.networking.k8s.io/v1alpha2
+metadata:
+  name: k8s-gateway-api-demo
+spec:
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+      - name: k8s-gateway-api-demo-service-__PREVIOUS_VERSION__
+        port: 8080
+        weight: 50
+      - name: k8s-gateway-api-demo-service-__VERSION__
+        port: 8080
+        weight: 50
+        
