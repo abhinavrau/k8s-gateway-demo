@@ -8,16 +8,16 @@ echo "ClusterRegion: ${_CLUSTER_REGION}"
 rollout_http_route() 
 {
     pwd
-    cd config-ci-cd
+    cd config-ci-cd || exit
 
     # Use the SHA of the new service 
     # Since the output is sorted by Oldest to Newest, this command will give us the new service version.
     export _SERVICE_N_PLUS_ONE=$(cat ../services.txt | awk '{print $1}' | tail -n +3 | sed -e "s/^k8s-gateway-api-demo-service-//")
-    sed -i 's/__VERSION__/'"${_SERVICE_N_PLUS_ONE}"'/g' overlays/prod-100p/kustomization.yaml
-    kubectl kustomize overlays/prod-100p > ../sp1-config-sync-app-owner/gateway-api-demo-http-route.yaml
+    sed -i 's/__VERSION__/'"${_SERVICE_N_PLUS_ONE}"'/g' overlays/prod-100p/patch.yaml
+    kustomize build overlays/prod-100p > ../sp1-config-sync-app-owner/gateway-api-demo-http-route.yaml
     
     # Commit the config for traffic split
-    cd ../sp1-config-sync-app-owner
+    cd ../sp1-config-sync-app-owner || exit
 
     git add gateway-api-demo-http-route.yaml && \
     git commit -m "Rolling out HTTP-Route! 
@@ -31,7 +31,7 @@ rollout_http_route()
 git_push() 
 {
     pwd
-    cd sp1-config-sync-app-owner 
+    cd sp1-config-sync-app-owner || exit 
     #git tag "Rollout:${_SERVICE_N_PLUS_ONE}"
     git push origin main #"Rollout:${_SERVICE_N_PLUS_ONE}"
     cd ..
@@ -39,18 +39,18 @@ git_push()
 
 git_clone() 
 {
-    git clone https://github.com/${GITHUB_USERNAME}/sp1-config-sync-app-owner && \
-    cd sp1-config-sync-app-owner 
-    git config user.email ${GITHUB_EMAIL}
-    git config user.name ${GITHUB_USERNAME}
-    git remote set-url origin https://${GITHUB_USERNAME}:${GITHUB_TOKEN}@github.com/${GITHUB_USERNAME}/sp1-config-sync-app-owner.git
+    git clone https://github.com/"${GITHUB_USERNAME}"/sp1-config-sync-app-owner && \
+    cd sp1-config-sync-app-owner || exit 
+    git config user.email "${GITHUB_EMAIL}"
+    git config user.name "${GITHUB_USERNAME}"
+    git remote set-url origin https://"${GITHUB_USERNAME}":"${GITHUB_TOKEN}"@github.com/"${GITHUB_USERNAME}"/sp1-config-sync-app-owner.git
     cd ..
 }
 
 delete_old_app_and_service() 
 {
     pwd
-    cd sp1-config-sync-app-owner 
+    cd sp1-config-sync-app-owner || exit 
     # Since the output is sorted by Oldest to Newest, this command will give us the old service version.
     export _SERVICE_N_SHA=$(cat ../services.txt | awk '{print $1}' | tail -n +2 | head -n +1 | sed -e "s/^k8s-gateway-api-demo-service-//")
     rm gateway-api-demo-app-"$_SERVICE_N_SHA".yaml
@@ -65,7 +65,7 @@ delete_old_app_and_service()
 }
 
 # We are retrieving the deployed services and the GIT-SHA from the service names to identify the previous deployment which is currently servicing live traffic. 
-gcloud container clusters get-credentials  ${_CLUSTER_NAME} --region=${_CLUSTER_REGION}
+gcloud container clusters get-credentials  "${_CLUSTER_NAME}" --region="${_CLUSTER_REGION}"
 # If your namespace has more than one app/service then please remember to add more filters
 kubectl get service -n foo --sort-by=.metadata.creationTimestamp > services.txt 2> errors.txt
 if [[ "$(echo $?)" == "0" ]];
