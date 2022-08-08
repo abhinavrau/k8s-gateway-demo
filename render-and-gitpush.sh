@@ -7,12 +7,12 @@ echo "ClusterRegion: ${_CLUSTER_REGION}"
 render_app_and_service() 
 {
     pwd
-    cd config-ci-cd
+    cd config-ci-cd || exit
 
-    sed -i 's/__VERSION__/'"$SHORT_SHA"'/g' overlays/deployment/kustomization.yaml
+    sed -i 's/__VERSION__/'"$SHORT_SHA"'/g' overlays/deployment/patch.yaml
     kubectl kustomize overlays/deployment > ../sp1-config-sync-app-owner/gateway-api-demo-app-"$SHORT_SHA".yaml
 
-    cd ../sp1-config-sync-app-owner 
+    cd ../sp1-config-sync-app-owner || exit 
 
     echo "Update foo-app to version: ${SHORT_SHA}" > README.md
     
@@ -30,17 +30,17 @@ render_app_and_service()
 render_http_route_50_50()
 {
     pwd
-    cd config-ci-cd
+    cd config-ci-cd || exit
     # Use the SHA of the current service 
     export _SERVICE_N_SHA=$(cat ../svc-names.txt | sed -e "s/^k8s-gateway-api-demo-service-//")
-    sed -i 's/__PREVIOUS_VERSION__/'"${_SERVICE_N_SHA}"'/g' overlays/prod-50-50/kustomization.yaml
+    sed -i 's/__PREVIOUS_VERSION__/'"${_SERVICE_N_SHA}"'/g' overlays/prod-50-50/patch.yaml
     
     # Use ${SHORT_SHA} for new service 
-    sed -i 's/__VERSION__/'"${SHORT_SHA}"'/g' overlays/prod-50-50/kustomization.yaml
+    sed -i 's/__VERSION__/'"${SHORT_SHA}"'/g' overlays/prod-50-50/patch.yaml
     kubectl kustomize overlays/prod-50-50 > ../sp1-config-sync-app-owner/gateway-api-demo-http-route.yaml
 
     # Commit the config for traffic split
-    cd ../sp1-config-sync-app-owner
+    cd ../sp1-config-sync-app-owner || exit
 
     git add gateway-api-demo-http-route.yaml && \
     git commit -m "Built from commit ${COMMIT_SHA} 
@@ -54,13 +54,13 @@ render_http_route_50_50()
 render_http_route_100p() 
 {
     pwd
-    cd config-ci-cd
+    cd config-ci-cd || exit
     # Use ${SHORT_SHA} for new service 
-    sed -i 's/__VERSION__/'"${SHORT_SHA}"'/g' overlays/prod-100p/kustomization.yaml
+    sed -i 's/__VERSION__/'"${SHORT_SHA}"'/g' overlays/prod-100p/patch.yaml
     kubectl kustomize overlays/prod-100p > ../sp1-config-sync-app-owner/gateway-api-demo-http-route.yaml
     
     # Commit the config for traffic split
-    cd ../sp1-config-sync-app-owner
+    cd ../sp1-config-sync-app-owner || exit
 
     git add gateway-api-demo-http-route.yaml && \
     git commit -m "Built from commit ${COMMIT_SHA} 
@@ -73,7 +73,7 @@ render_http_route_100p()
 git_push() 
 {
     pwd
-    cd sp1-config-sync-app-owner 
+    cd sp1-config-sync-app-owner || exit 
     #git tag ${SHORT_SHA}
     git push origin main #${SHORT_SHA}
     cd ..
@@ -81,16 +81,16 @@ git_push()
 
 git_clone() 
 {
-    git clone https://github.com/${GITHUB_USERNAME}/sp1-config-sync-app-owner && \
-    cd sp1-config-sync-app-owner 
-    git config user.email ${GITHUB_EMAIL}
-    git config user.name ${GITHUB_USERNAME}
-    git remote set-url origin https://${GITHUB_USERNAME}:${GITHUB_TOKEN}@github.com/${GITHUB_USERNAME}/sp1-config-sync-app-owner.git
+    git clone https://github.com/"${GITHUB_USERNAME}"/sp1-config-sync-app-owner && \
+    cd sp1-config-sync-app-owner || exit 
+    git config user.email "${GITHUB_EMAIL}"
+    git config user.name "${GITHUB_USERNAME}"
+    git remote set-url origin https://"${GITHUB_USERNAME}":"${GITHUB_TOKEN}"@github.com/"${GITHUB_USERNAME}"/sp1-config-sync-app-owner.git
     cd ..
 }
 
 # We are retrieving the deployed services and the GIT-SHA from the service names to identify the previous deployment which is currently servicing live traffic. 
-gcloud container clusters get-credentials  ${_CLUSTER_NAME} --region=${_CLUSTER_REGION}
+gcloud container clusters get-credentials  "${_CLUSTER_NAME}" --region="${_CLUSTER_REGION}"
 # If your namespace has more than one app/service then please remember to add more filters
 kubectl get service -n foo --sort-by=.metadata.creationTimestamp > services.txt 2> errors.txt
 if [[ "$(echo $?)" == "0" ]];
