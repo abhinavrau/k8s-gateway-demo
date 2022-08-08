@@ -9,8 +9,8 @@ render_app_and_service()
     pwd
     cd config-ci-cd || exit
 
-    sed -i 's/__VERSION__/'"$SHORT_SHA"'/g' overlays/deployment/patch.yaml
-    kubectl kustomize overlays/deployment > ../sp1-config-sync-app-owner/gateway-api-demo-app-"$SHORT_SHA".yaml
+    sed -i 's/__VERSION__/'"$SHORT_SHA"'/g' overlays/deployment/kustomization.yaml
+    kustomize build overlays/deployment > ../sp1-config-sync-app-owner/gateway-api-demo-app-"$SHORT_SHA".yaml
 
     cd ../sp1-config-sync-app-owner || exit 
 
@@ -37,7 +37,7 @@ render_http_route_50_50()
     
     # Use ${SHORT_SHA} for new service 
     sed -i 's/__VERSION__/'"${SHORT_SHA}"'/g' overlays/prod-50-50/patch.yaml
-    kubectl kustomize overlays/prod-50-50 > ../sp1-config-sync-app-owner/gateway-api-demo-http-route.yaml
+    kustomize build  overlays/prod-50-50 > ../sp1-config-sync-app-owner/gateway-api-demo-http-route.yaml
 
     # Commit the config for traffic split
     cd ../sp1-config-sync-app-owner || exit
@@ -57,7 +57,7 @@ render_http_route_100p()
     cd config-ci-cd || exit
     # Use ${SHORT_SHA} for new service 
     sed -i 's/__VERSION__/'"${SHORT_SHA}"'/g' overlays/prod-100p/patch.yaml
-    kubectl kustomize overlays/prod-100p > ../sp1-config-sync-app-owner/gateway-api-demo-http-route.yaml
+    kustomize build overlays/prod-100p > ../sp1-config-sync-app-owner/gateway-api-demo-http-route.yaml
     
     # Commit the config for traffic split
     cd ../sp1-config-sync-app-owner || exit

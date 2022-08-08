@@ -1,6 +1,6 @@
 steps:
 # Render HTTPRoute to rollout 100% traffic to N+1
-- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:latest'
+- name: 'gcr.io/cloud-builders/gke-deploy'
   id: Rollback new application deployment and route 100% traffic to older deployment 
   entrypoint: 'bash'
   args: ['./rollback.sh']

@@ -18,7 +18,7 @@ steps:
 
 # Render New Deployment config with new container version and commit to config-sync-app-owner repo
 # Render HTTPRoute 
-- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:latest'
+- name: 'gcr.io/cloud-builders/gke-deploy'
   id: Render New App Deployment, Service and HTTPRoute, and Commit to Namespace repo (config-sync-app-owner)
   entrypoint: 'bash'
   args: ['./render-and-gitpush.sh']
