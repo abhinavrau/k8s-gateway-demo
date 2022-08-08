@@ -55,7 +55,7 @@ delete_old_app_and_service()
     export _SERVICE_N_SHA=$(cat ../services.txt | awk '{print $1}' | tail -n +2 | head -n +1 | sed -e "s/^k8s-gateway-api-demo-service-//")
     rm gateway-api-demo-app-"$_SERVICE_N_SHA".yaml
 
-    git add gateway-api-demo-app-"$_SERVICE_N_SHA".yaml && \
+    git add . && \
     git commit -m "Deleting: ${_SERVICE_N_SHA}
     Deleting file: gateway-api-demo-app-${_SERVICE_N_SHA}.yaml
     Author: $(git log --format='%an <%ae>' -n 1 HEAD)" 
