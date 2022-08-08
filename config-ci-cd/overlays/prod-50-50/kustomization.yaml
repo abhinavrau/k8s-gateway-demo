@@ -25,20 +25,20 @@ patches:
   patch: |-
 
     - op: replace
-      path: /spec/rules/0/forwardTo/0/serviceName
+      path: /spec/rules/0/backendRefs/0/name
       value: "k8s-gateway-api-demo-service-__PREVIOUS_VERSION__"
     - op: replace
-      path: /spec/rules/0/forwardTo/0/weight
+      path: /spec/rules/0/backendRefs/0/weight
       value: 50
 
       # add app 
     - op: add
-      path: /spec/rules/0/forwardTo/1/serviceName
+      path: /spec/rules/0/backendRefs/1/name
       value: "k8s-gateway-api-demo-service-__VERSION__"
     - op: add
-      path: /spec/rules/0/forwardTo/1/port
+      path: /spec/rules/0/backendRefs/1/port
       value: 8080
     - op: add
-      path: /spec/rules/0/forwardTo/1/weight
+      path: /spec/rules/0/backendRefs/1/weight
       value: 50
       
