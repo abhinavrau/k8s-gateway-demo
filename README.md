@@ -42,10 +42,10 @@ gcloud container clusters get-credentials [your-gke-cluster-name] --zone=[your-g
 
 Install the Istio Kubernetes Gateway API CRDs and Istio by following the directions here: https://istio.io/latest/docs/tasks/traffic-management/ingress/gateway-api/
 ```
-kubectl kustomize "github.com/kubernetes-sigs/gateway-api/config/crd?ref=v0.3.0" | kubectl apply -f -
 curl -sL https://istio.io/downloadIstioctl | sh -
 export PATH=$PATH:$HOME/.istioctl/bin
-istioctl install
+istioctl install --set profile=demo -y 
+kubectl get crd gateways.gateway.networking.k8s.io || { kubectl kustomize "github.com/kubernetes-sigs/gateway-api/config/crd?ref=v0.4.0" | kubectl apply -f -; }
 
 # confirm install is successful 
 kubectl get ns
