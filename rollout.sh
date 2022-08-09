@@ -53,6 +53,9 @@ delete_old_app_and_service()
     cd sp1-config-sync-app-owner || exit 
     # Since the output is sorted by Oldest to Newest, this command will give us the old service version.
     cat ../services.txt
+    cat ../services.txt | awk '{print $1}'
+    cat ../services.txt | awk '{print $1}' | tail -n +2
+    cat ../services.txt | awk '{print $1}' | tail -n +2 | head -n +1 
     export _SERVICE_N_SHA=$(cat ../services.txt | awk '{print $1}' | tail -n +2 | head -n +1 | sed -e "s/^k8s-gateway-api-demo-service-//")
     echo "$_SERVICE_N_SHA"
     rm gateway-api-demo-app-"$_SERVICE_N_SHA".yaml  
