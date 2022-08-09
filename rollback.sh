@@ -11,7 +11,7 @@ rollback_http_route()
     cd config-ci-cd || exit
 
     # Use the SHA of the current service 
-    export _SERVICE_N_SHA=$(cat ../services.txt | awk '{print $1}' | tail -n +2 | head -n +1 | sed -e "s/^k8s-gateway-api-demo-service-//")
+    export _SERVICE_N_SHA=$(cat ../services.txt | awk '{print $1}' | tail -n +2 | head -n 1 | sed -e "s/^k8s-gateway-api-demo-service-//")
     sed -i 's/__VERSION__/'"${_SERVICE_N_SHA}"'/g' overlays/prod-100p/patch.yaml
     kubectl kustomize overlays/prod-100p > ../sp1-config-sync-app-owner/gateway-api-demo-http-route.yaml
     
